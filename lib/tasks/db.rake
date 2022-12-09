@@ -22,5 +22,16 @@ namespace :db do
     abort 'This version of Mastodon requires PostgreSQL 9.5 or newer. Please update PostgreSQL before updating Mastodon' if version < 90_500
   end
 
+  desc 'Checks to see if the database exists'
+  task exists: :environment do
+    begin
+      ActiveRecord::Base.connection
+    rescue
+      exit 1
+    else
+      exit 0
+    end
+  end
+
   Rake::Task['db:migrate'].enhance(['db:pre_migration_check'])
 end
